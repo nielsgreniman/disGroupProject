@@ -1,0 +1,19 @@
+{% extends "layout.html" %}
+{% block title %}
+Home
+{% endblock %}
+{% block content %}
+
+<p>Enter your name  and the decade you want to quiz.</p>
+
+<form action="">
+    <label for="fname">Name:</label>
+    <input type="text" id="name" name="name"><br><br>
+    <select name="decade" id="decade">
+        {% for i in range(1930,2010,10)  %}
+        <option value="{{ i }}">{{ i }}</option>
+        {% endfor %}
+    </select><br><br>
+    <input class="startbutton" type="submit" value="START">
+</form>
+{% endblock %}
