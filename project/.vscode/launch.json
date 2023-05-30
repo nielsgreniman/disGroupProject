@@ -5,13 +5,14 @@
     "version": "0.2.0",
     "configurations": [
 
+
         {
             "name": "Python: Flask",
             "type": "python",
             "request": "launch",
             "module": "flask",
             "env": {
-                "FLASK_APP": "hello_app.webapp",
+                "FLASK_APP": "project.webapp",
                 "FLASK_DEBUG": "1"
             },
             "args": [

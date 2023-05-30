@@ -4,16 +4,30 @@ Home
 {% endblock %}
 {% block content %}
 
+
+<h1> The Movie Quiz</h1>
+
 <p>Enter your name  and the decade you want to quiz.</p>
 
-<form action="">
-    <label for="fname">Name:</label>
-    <input type="text" id="name" name="name"><br><br>
-    <select name="decade" id="decade">
-        {% for i in range(1930,2010,10)  %}
-        <option value="{{ i }}">{{ i }}</option>
-        {% endfor %}
-    </select><br><br>
-    <input class="startbutton" type="submit" value="START">
-</form>
+<table style="margin-left: auto; margin-right: auto;">
+    <tr>
+        <td style="text-align: left;">
+        <form method=post name="quiz_start">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name"><br><br>
+            <label for="decade">Decade:</label>
+            <div class="custom-select" style="width:200px;">
+            <select name="decade" id="decade">
+                {% for i in range(1930,2030,10)  %}
+                <option value="{{ i }}">{{ i }}</option>
+                {% endfor %}
+            </select>
+            </div>
+
+            <input class="startbutton" type="submit" value="Take the quiz">
+        </form>
+        </td>
+    </tr>
+</table>
+
 {% endblock %}
