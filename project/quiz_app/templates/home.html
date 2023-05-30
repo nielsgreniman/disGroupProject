@@ -12,7 +12,7 @@ Home
 <table style="margin-left: auto; margin-right: auto;">
     <tr>
         <td style="text-align: left;">
-        <form method=post name="quiz_start">
+        <form method="post" name="quiz_start" action="/">
             <label for="name">Name:</label>
             <input type="text" id="name" name="name"><br><br>
             <label for="decade">Decade:</label>
@@ -28,6 +28,13 @@ Home
         </form>
         </td>
     </tr>
+    {% if error: %}
+    <tr>
+        <td>
+            <span class="message">Please provide your name</span>
+        </td>
+    </tr>
+    {% endif %}
 </table>
 
 {% endblock %}
