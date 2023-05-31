@@ -13,10 +13,28 @@
 
 <body>
     {%if name %}
-    <h1>Hello {{ name }} - {{ decade }}'s</h1>
+    <h1 style="text-shadow: 2px 2px 8px yellow;">Hello {{ name }}! This is the {{ decade }}'s</h1>
     {% else %}
     <span class="message">Please provide your name</span>
     {% endif %}
+
+    <!-- Highscore Field -->
+    <div class="highscore">
+        Highscore: <span>{{ highscore }}</span>
+    </div>
+
+    <!-- Quiz Question Field -->
+    <div class="quiz">
+        <label for="quiz-question">Quiz Question:</label>
+        <p style="font-style: italic;">{{ quiz_question }}</p>
+
+        <!-- Answer Text Box -->
+        <div class="answer-field">
+            <label for="answer">Your Answer:</label>
+            <input type="text" id="answer" name="answer" placeholder="Enter your answer" />
+        </div>
+    </div>
+    
 </body>
 
 </html>

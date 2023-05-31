@@ -45,7 +45,12 @@ def get_data():
 def quiz():
     name = session.get("name")
     decade = session.get("decade")
-    return render_template('quiz.html', name=name, decade=decade)
+    return render_template(
+                            'quiz.html', 
+                            name=name, 
+                            decade=decade,
+                            highscore="x/y",
+                            quiz_question="Hvordan er logikken her???")
 
 if __name__ == '__main__':
     app.run(debug=True)
