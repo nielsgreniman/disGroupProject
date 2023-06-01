@@ -1,10 +1,44 @@
 {% extends "layout.html" %}
 {% block title %}
-Contact us
+Finish
 {% endblock %}
 {% block content %}
-<p>You have finished the movie quiz with the following score:</p>
-<p>Take another quiz: Choose decade</p>
-<p>Or: End</p>
+
+<table class = "finish_table" style="margin-left: auto; margin-right: auto; text-align: center;">
+    <tr style="text-align: center;">
+        <p>You have finished the movie quiz with the following score: x/y</p>
+    </tr>
+    <tr>
+        <p>Take another quiz: Choose decade</p>
+    </tr>
+    <tr>
+        <td style="text-align: left;">
+        <form method="post" name="finish" action="/finish">
+            <label for="decade">Decade:</label>
+            <div class="custom-select" style="width:200px;">
+            <select name="decade" id="decade">
+                {% for i in range(1930,2030,10)  %}
+                <option value="{{ i }}">{{ i }}</option>
+                {% endfor %}
+            </select>
+            </div>
+            <input class="startbutton" type="submit" value="Take the quiz">
+        </form>
+        </td>
+    </tr>
+</table>
+
+
+<table style='margin-right: auto;margin-left: auto; text-align: center;'>
+    <tr>
+        <p>Or end the quiz:</p>
+    </tr>
+    <tr>
+    <td>
+        <a class='button' href='/' aria-label='Logout'><span>Finish Quiz</span></a>
+    </td>
+    </tr>
+</table>
+
 
 {% endblock %}

@@ -1,14 +1,11 @@
-from flask import Flask
 from flask import render_template
 from flask import request, url_for, redirect, session
 from datetime import datetime
 from . import app
-
-app.secret_key = "super secret key"
+import quiz_app.models
 
 @app.route("/", methods = ['GET', 'POST'])
 def home():
-##
     session.clear()
     noNameError = False
     if request.method == 'POST':
@@ -20,7 +17,6 @@ def home():
             session["name"] = name
             session["decade"] = decade
             return redirect(url_for('quiz'))
-###
     return render_template("home.html", error=noNameError)
 
 @app.route("/about/")
@@ -30,6 +26,24 @@ def about():
 @app.route("/contact/")
 def contact():
     return render_template("contact.html")
+
+@app.route("/finish/", methods = ['GET', 'POST'])
+def finish():
+    name = session.get("name")
+
+    if not name:
+        return render_template("home.html", error=False)
+
+    if request.method == 'POST':
+        decade = request.form.get('decade')
+        finish = request.form.get('finish')
+        if not finish:
+            session["decade"] = decade
+            return redirect(url_for('quiz'))
+        else:
+            return render_template("home.html", error=False)
+
+    return render_template("finish.html")
 
 @app.route("/hello/")
 @app.route("/hello/<name>")
@@ -58,23 +72,29 @@ def quiz():
                 return "Quiz number should be an integer."
         else:
             return "No quiz number received."
+    if quiz_number == 6:
+        return render_template("finish.html")
     if name and decade:
 # Her skal der nu ske følgende:
 # Funktion der skriver navn ned i databasen
+# DONE VIA MODULS.PY
 
 # Der loopes 5 gange, ét for hvert spørgsmål
 # Hvis i > 5 så slut => redirect til slutside.
 # Slutside kan så enten gå til quiz-side eller til home-side
+# DONE
 
 # Fem film væælges tilfældig fra databasen hørende til det rigtige årti
 # Lav funktion dertil
+# DONE VIA SQL - MODULS.PY
 
 # Scoren opdateres for hvert spørgsmål
 # Lav funktion dertil
 
 # Next-knappen sender information om, hvilket spørgsmål
 # der er det næste i ræækken, dvs. variablen "i"
-#
+# DONE
+
             chosen_movie = "test"
             quiz_question = "Which year did the following movie first appear?"
             return render_template(
@@ -87,6 +107,7 @@ def quiz():
                                     chosen_movie=chosen_movie)
     else:
         return render_template("home.html", error=False)
+
 
 
 if __name__ == '__main__':

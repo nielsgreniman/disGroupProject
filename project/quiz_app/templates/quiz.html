@@ -11,7 +11,7 @@
 
 </head>
 
-<body>
+<body onload="document.answer_field.answer.focus();">
     {%if name %}
     <h1 style="text-shadow: 2px 2px 8px yellow;">Hello {{ name }}! This is the {{ decade }}'s</h1>
     {% else %}
