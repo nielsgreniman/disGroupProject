@@ -25,11 +25,14 @@
 
     <!-- Quiz Question Field -->
     <div class="quiz">
-        <label for="quiz-question">Quiz Question:</label>
-        <p style="font-style: italic;">{{ quiz_question }}</p>
+<!--        <label for="quiz-question">Quiz Question:</label>
+-->
+        <p style="font-style: roman;">{{ quiz_question }}:</p>
         <p style="font-style: italic;">{{ chosen_movie }}</p>
-        <p style="font-style: italic;">Quiz-number: {{ quiz_number }}</p>
-
+<!--
+        <p style="font-style: italic;">Question-number: {{ question_number }}</p>
+        <p style="font-style: italic;">Quiz_id: {{ quiz_id }}</p>
+-->
 
         <!-- Answer Text Box -->
 <form method="post" name="answer_field" action="/quiz">
@@ -37,7 +40,8 @@
             <label for="answer">Your Answer:</label>
             <input type="text" id="answer" name="answer" placeholder="Enter your answer" />
             <input class="startbutton" type="submit" value="Next" style="float: right;">
-            <input type="hidden" id="quiz_number" name="quiz_number" value='{{ quiz_number }}'>
+            <input type="hidden" id="question_number" name="question_number" value='{{ question_number }}'>
+            <input type="hidden" id="quiz_id" name="quiz_id" value='{{ quiz_id }}'>
         </div>
     </div>
 

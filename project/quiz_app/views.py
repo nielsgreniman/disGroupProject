@@ -2,7 +2,7 @@ from flask import render_template
 from flask import request, url_for, redirect, session
 from datetime import datetime
 from . import app
-import quiz_app.models
+from quiz_app.models import create_Player, Player_Exists, update_Players_Score, create_quiz, get_question, check_answer
 
 @app.route("/", methods = ['GET', 'POST'])
 def home():
@@ -60,21 +60,60 @@ def get_data():
 
 @app.route('/quiz',  methods = ['GET', 'POST'])
 def quiz():
-    quiz_number = 1
     name = session.get("name")
     decade = session.get("decade")
-    if request.method == 'POST':
-        quiz_number = request.form.get('quiz_number', type=int)
-        if quiz_number is not None:
+
+    # No access if you have not given name and decade
+    if not (name and decade):
+        return render_template("home.html", error=False)
+
+    # First question
+    if not request.method == 'POST':
+        if not Player_Exists(name, decade):
+            create_Player(name, decade)
+        question_number = 1
+        quiz_id = create_quiz(name,decade)[0]
+        question = get_question(quiz_id, question_number)
+        quiz_question = question[1]
+        chosen_movie = question[2]
+        return render_template(
+                                'quiz.html',
+                                name=name,
+                                decade=decade,
+                                highscore="x/y",
+                                quiz_question=quiz_question,
+                                question_number=question_number,
+                                quiz_id=quiz_id,
+                                chosen_movie=chosen_movie)
+
+    # Question 2-5
+    else:
+        question_number = request.form.get('question_number', type=int)
+        quiz_id = request.form.get('quiz_id', type=int)
+        if question_number is not None:
             try:
-                quiz_number = int(quiz_number) + 1
+                question_number = int(question_number) + 1
             except ValueError:
-                return "Quiz number should be an integer."
+                return "Question number should be an integer."
         else:
-            return "No quiz number received."
-    if quiz_number == 6:
-        return render_template("finish.html")
-    if name and decade:
+            return "No question number received."
+        if question_number < 6:
+            question = get_question(quiz_id, question_number)
+            quiz_question = question[1]
+            chosen_movie = question[2]
+            return render_template(
+                                    'quiz.html',
+                                    name=name,
+                                    decade=decade,
+                                    highscore="x/y",
+                                    quiz_question=quiz_question,
+                                    question_number=question_number,
+                                    quiz_id=quiz_id,
+                                    chosen_movie=chosen_movie)
+        # Quiz finish
+        else:
+            return render_template("finish.html")
+
 # Her skal der nu ske følgende:
 # Funktion der skriver navn ned i databasen
 # DONE VIA MODULS.PY
@@ -94,20 +133,6 @@ def quiz():
 # Next-knappen sender information om, hvilket spørgsmål
 # der er det næste i ræækken, dvs. variablen "i"
 # DONE
-
-            chosen_movie = "test"
-            quiz_question = "Which year did the following movie first appear?"
-            return render_template(
-                                    'quiz.html',
-                                    name=name,
-                                    decade=decade,
-                                    highscore="x/y",
-                                    quiz_question=quiz_question,
-                                    quiz_number=quiz_number,
-                                    chosen_movie=chosen_movie)
-    else:
-        return render_template("home.html", error=False)
-
 
 
 if __name__ == '__main__':
