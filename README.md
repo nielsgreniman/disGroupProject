@@ -17,6 +17,8 @@ Create a database 'movieProject' in PostgreSQL and run the three sql files:
     - schema_ins.sql
 Remember to correct the path in the last line in the file import_movie_from_sql.sql to point to the movie.csv file
 
+Change the information in the file __init__.py corresponding to the database name and password.
+
 # Run webapp
 Navigate into the quiz_app folder, then launch the program using
 python -m flask run

@@ -44,8 +44,17 @@
             <input type="hidden" id="quiz_id" name="quiz_id" value='{{ quiz_id }}'>
         </div>
     </div>
-
 </form>
+
+    <!-- Highscore Field -->
+
+{%if question_number > 1%}
+    {%if is_correct_answer %}
+    <h1 style="text-shadow: 2px 2px 8px green;">Your answer was correct! The correct answer was indeed {{ correct_answer }}</h1>
+    {% else %}
+    <span class="message">Sorry, wrong answer. The correct answer was {{ correct_answer }}</span>
+    {% endif %}
+{% endif %}
 </body>
 
 </html>

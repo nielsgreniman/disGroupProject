@@ -118,9 +118,8 @@ def get_question(quiz_id, question_number):
         return []
 
 
-def check_answer(quiz_id, question_number, answer):
+def get_correct_answer(quiz_id, question_number):
     cur = conn.cursor()
-
     # Retrieve the correct answer from the Movies table
     sql = """
     SELECT m.movie_id, q.question, q.movie_attribute
@@ -133,7 +132,7 @@ def check_answer(quiz_id, question_number, answer):
     question_data = cur.fetchone()
 
     if not question_data:
-        return "Invalid quiz_id or question_number."
+        return False
     else:
         movie_id = question_data[0]
         question = question_data[1]
@@ -143,12 +142,9 @@ def check_answer(quiz_id, question_number, answer):
         cur.execute(sql, (movie_id,))
         correct_answer = cur.fetchone()
 
-        # Check if the provided answer matches the correct answer
-        if correct_answer:
-            is_correct = (answer.lower() == correct_answer[0].lower())
-        else:
-            is_correct = False
-
     cur.close()
 
-    return is_correct
+    if correct_answer:
+        return correct_answer
+    else:
+        return []

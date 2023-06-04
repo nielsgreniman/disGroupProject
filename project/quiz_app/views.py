@@ -2,7 +2,7 @@ from flask import render_template
 from flask import request, url_for, redirect, session
 from datetime import datetime
 from . import app
-from quiz_app.models import create_Player, Player_Exists, update_Players_Score, create_quiz, get_question, check_answer
+from quiz_app.models import create_Player, Player_Exists, update_Players_Score, create_quiz, get_question, get_correct_answer
 
 @app.route("/", methods = ['GET', 'POST'])
 def home():
@@ -88,8 +88,25 @@ def quiz():
 
     # Question 2-5
     else:
+        # Check answer and credit points
+        answer = request.form.get('answer')
         question_number = request.form.get('question_number', type=int)
         quiz_id = request.form.get('quiz_id', type=int)
+        correct_answer = "Error: Unknown"
+        if answer is not None:
+            # Strip leading and trailing whitespaces from the answer
+            answer = answer.strip()
+            correct_answer = get_correct_answer(quiz_id, question_number)
+            # Check if the provided answer appears in the correct answer - at least two characters
+            if correct_answer:
+                is_correct = any(answer.lower()[i:i+4] in correct_answer[0].lower() for i in range(len(answer) - 3))
+                correct_answer = correct_answer[0]
+            else:
+                is_correct = False
+                correct_answer =  "Error: Unknown answer"
+        else:
+            is_correct = False
+        # Add one to question number
         if question_number is not None:
             try:
                 question_number = int(question_number) + 1
@@ -98,6 +115,7 @@ def quiz():
         else:
             return "No question number received."
         if question_number < 6:
+            # New question in line
             question = get_question(quiz_id, question_number)
             quiz_question = question[1]
             chosen_movie = question[2]
@@ -109,8 +127,10 @@ def quiz():
                                     quiz_question=quiz_question,
                                     question_number=question_number,
                                     quiz_id=quiz_id,
-                                    chosen_movie=chosen_movie)
-        # Quiz finish
+                                    chosen_movie=chosen_movie,
+                                    is_correct_answer=is_correct,
+                                    correct_answer=correct_answer)
+        # Quiz finish after the fifth question
         else:
             return render_template("finish.html")
 
