@@ -67,7 +67,7 @@ def quiz():
     if not (name and decade):
         return render_template("home.html", error=False)
 
-    # First question
+    # First question # Her er man blevet redirected fra forsiden - UDEN en post
     if not request.method == 'POST':
         if not Player_Exists(name, decade):
             create_Player(name, decade)
@@ -97,7 +97,8 @@ def quiz():
             # Strip leading and trailing whitespaces from the answer
             answer = answer.strip()
             correct_answer = get_correct_answer(quiz_id, question_number)
-            # Check if the provided answer appears in the correct answer - at least two characters
+            # Check if the provided answer appears in the correct answer - at least four characters
+            # This is primitive!
             if correct_answer:
                 is_correct = any(answer.lower()[i:i+4] in correct_answer[0].lower() for i in range(len(answer) - 3))
                 correct_answer = correct_answer[0]
