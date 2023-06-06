@@ -1,2 +1,2 @@
 *.pyc 
-__init__.py
+project/quiz_app/__init__.py
