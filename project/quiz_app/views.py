@@ -4,6 +4,7 @@ from datetime import datetime
 from . import app
 from quiz_app.models import create_Player, Player_Exists, update_Players_Score, create_quiz, get_question, get_correct_answer, get_player_score
 
+# Home page. Here the player is asked to write his/her name and the decade they want to quiz about.
 @app.route("/", methods = ['GET', 'POST'])
 def home():
     session.clear()
@@ -19,6 +20,7 @@ def home():
             return redirect(url_for('quiz'))
     return render_template("home.html", error=noNameError)
 
+# Finish page. Here the player is presented a total score and the possibility to play again.
 @app.route("/finish/", methods = ['GET', 'POST'])
 def finish():
     name = session.get("name")
@@ -37,6 +39,8 @@ def finish():
 
     return render_template("finish.html")
 
+# Quiz page. Displayed for each of the five questions. The player can submit an answer and will then 
+# move on to the next question. The player can also exit the quiz.
 @app.route('/quiz',  methods = ['GET', 'POST'])
 def quiz():
     name = session.get("name")
