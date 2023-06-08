@@ -68,25 +68,28 @@ def quiz():
 
     # Question 2-5
     else:
-        # Check answer
         answer = request.form.get('answer')
         question_number = request.form.get('question_number', type=int)
         quiz_id = request.form.get('quiz_id', type=int)
         correct_answer = "Error: Unknown"
         if answer is not None:
-            # Strip leading and trailing whitespaces from the answer
+            # Strip leading and trailing whitespaces from the answer (to easy comparison with correct answer):
             answer = answer.strip()
-            # Extract correct answer from database
+            # Extract correct answer from database:
             correct_answer = get_correct_answer(quiz_id, question_number)
             # Check player answer. To take spelling mistakes into account, just four 
-            # characters (in the correct order, though) need to match.
-            # This is primitive!
+            # characters need to match (in the correct order, though) for answers longer
+            # than four characters:
             if correct_answer:
-                is_correct = any(answer.lower()[i:i+4] in correct_answer[0].lower() for i in range(len(answer) - 3))
-                correct_answer = correct_answer[0]
+                if len(correct_answer[0]) < 4:
+                    is_correct = (answer.lower() == correct_answer[0].lower())
+                else:
+                    is_correct = any(answer.lower()[i:i+4] in correct_answer[0].lower() for i in range(len(answer) - 3))
+                correct_answer = correct_answer[0].lower()
             else:
                 is_correct = False
                 correct_answer =  "Error: Unknown answer"
+
         else:
             is_correct = False
             
@@ -122,27 +125,6 @@ def quiz():
         else:
             return render_template("finish.html",
                                    score=get_player_score(name,decade))
-
-# Her skal der nu ske følgende:
-# Funktion der skriver navn ned i databasen
-# DONE VIA MODULS.PY
-
-# Der loopes 5 gange, ét for hvert spørgsmål
-# Hvis i > 5 så slut => redirect til slutside.
-# Slutside kan så enten gå til quiz-side eller til home-side
-# DONE
-
-# Fem film væælges tilfældig fra databasen hørende til det rigtige årti
-# Lav funktion dertil
-# DONE VIA SQL - MODULS.PY
-
-# Scoren opdateres for hvert spørgsmål
-# Lav funktion dertil
-
-# Next-knappen sender information om, hvilket spørgsmål
-# der er det næste i ræækken, dvs. variablen "i"
-# DONE
-
 
 if __name__ == '__main__':
     app.run(debug=True)
