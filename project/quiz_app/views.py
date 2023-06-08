@@ -2,7 +2,7 @@ from flask import render_template
 from flask import request, url_for, redirect, session
 from datetime import datetime
 from . import app
-from quiz_app.models import create_Player, Player_Exists, update_Players_Score, create_quiz, get_question, get_correct_answer
+from quiz_app.models import create_Player, Player_Exists, update_Players_Score, create_quiz, get_question, get_correct_answer, get_player_score
 
 @app.route("/", methods = ['GET', 'POST'])
 def home():
@@ -67,7 +67,7 @@ def quiz():
     if not (name and decade):
         return render_template("home.html", error=False)
 
-    # First question # Her er man blevet redirected fra forsiden - UDEN en post
+    # First question. Her er man blevet redirected fra forsiden - UDEN en post
     if not request.method == 'POST':
         if not Player_Exists(name, decade):
             create_Player(name, decade)
@@ -76,11 +76,12 @@ def quiz():
         question = get_question(quiz_id, question_number)
         quiz_question = question[1]
         chosen_movie = question[2]
+        # Inilialize player score at zero
+        update_Players_Score(name, decade, 0)
         return render_template(
                                 'quiz.html',
                                 name=name,
                                 decade=decade,
-                                highscore="x/y",
                                 quiz_question=quiz_question,
                                 question_number=question_number,
                                 quiz_id=quiz_id,
@@ -97,7 +98,8 @@ def quiz():
             # Strip leading and trailing whitespaces from the answer
             answer = answer.strip()
             correct_answer = get_correct_answer(quiz_id, question_number)
-            # Check if the provided answer appears in the correct answer - at least four characters
+            # Check player answer. To take spelling mistakes into account, just four 
+            # characters (in the correct order, though) need to match.
             # This is primitive!
             if correct_answer:
                 is_correct = any(answer.lower()[i:i+4] in correct_answer[0].lower() for i in range(len(answer) - 3))
@@ -107,6 +109,12 @@ def quiz():
                 correct_answer =  "Error: Unknown answer"
         else:
             is_correct = False
+            
+        # Add point to player
+        if is_correct:
+            score = get_player_score(name, decade) + 1
+            update_Players_Score(name, decade, score)
+            
         # Add one to question number
         if question_number is not None:
             try:
@@ -124,7 +132,6 @@ def quiz():
                                     'quiz.html',
                                     name=name,
                                     decade=decade,
-                                    highscore="x/y",
                                     quiz_question=quiz_question,
                                     question_number=question_number,
                                     quiz_id=quiz_id,
@@ -133,7 +140,8 @@ def quiz():
                                     correct_answer=correct_answer)
         # Quiz finish after the fifth question
         else:
-            return render_template("finish.html")
+            return render_template("finish.html",
+                                   score=get_player_score(name,decade))
 
 # Her skal der nu ske følgende:
 # Funktion der skriver navn ned i databasen

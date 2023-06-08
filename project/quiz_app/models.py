@@ -35,6 +35,17 @@ def update_Players_Score(name, decade, score):
     cur.execute(sql, (score,name, decade))
     conn.commit()
     cur.close()
+    
+def get_player_score(name,decade):
+    cur = conn.cursor()
+    sql = """
+    SELECT score FROM Players
+    WHERE player_name = %s AND decade = %s
+    """
+    cur.execute(sql, (name, decade,))
+    myvar = cur.fetchone()
+    cur.close()
+    return myvar[0]
 
 def create_quiz(name,decade):
     endDecade = str(int(decade) + 10)
