@@ -1,3 +1,21 @@
+#####################
+### About the app ###
+#####################
+
+Players select a decade, and will then recive five question about movies from that decade. The questions are
+randomly generated and can relate to 
+	-the release year
+	-the cast members
+	-the director
+	-the IMDB ranking
+A correct answer is awarded with one point - yelding a maximum of five points.
+
+
+
+######################################
+### How to compile and run the app ###
+######################################
+
 # disGroupProject
 Movie quiz created in Flask
 
