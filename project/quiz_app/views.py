@@ -39,7 +39,7 @@ def finish():
 
     return render_template("finish.html")
 
-# Quiz page. Displayed for each of the five questions. The player can submit an answer and will then 
+# Quiz page. Displayed for each of the five questions. The player can submit an answer and will then
 # move on to the next question. The player can also exit the quiz.
 @app.route('/quiz',  methods = ['GET', 'POST'])
 def quiz():
@@ -81,27 +81,28 @@ def quiz():
             answer = answer.strip()
             # Extract correct answer from database:
             correct_answer = get_correct_answer(quiz_id, question_number)
-            # Check player answer. To take spelling mistakes into account, just four 
+            # Check player answer. To take spelling mistakes into account, just four
             # characters need to match (in the correct order, though) for answers longer
             # than four characters:
             if correct_answer:
-                if len(correct_answer[0]) < 4:
-                    is_correct = (answer.lower() == correct_answer[0].lower())
+                short_correct_answer = correct_answer[0][:20] + " [...]" if len(correct_answer[0]) > 20 else correct_answer[0]
+                if len(short_correct_answer) < 4:
+                    is_correct = (answer.lower() == short_correct_answer.lower())
                 else:
                     is_correct = any(answer.lower()[i:i+4] in correct_answer[0].lower() for i in range(len(answer) - 3))
-                correct_answer = correct_answer[0].lower()
+                correct_answer = short_correct_answer
             else:
                 is_correct = False
                 correct_answer =  "Error: Unknown answer"
 
         else:
             is_correct = False
-            
+
         # Add point to player if answer is correct
         if is_correct:
             score = get_player_score(name, decade) + 1
             update_Players_Score(name, decade, score)
-            
+
         # Add one to question number
         if question_number is not None:
             try:
