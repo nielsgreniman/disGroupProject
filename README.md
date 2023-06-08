@@ -11,12 +11,15 @@ source .venv/bin/activate
 export set FLASK_APP=webapp
 
 # Set up database
-Create a database 'movieProject' in PostgreSQL and run the three sql files:
+Create a database 'movieProject' in PostgreSQL and run the three sql files listed below. Before you do,
+note that 'movie.csv' is located in the 'project' folder. Also, remember to update the path in the last 
+line in the file 'import_movie_from_sql.sql' - it is the path to 'movie.csv'. Finally, note that if you 
+have problems running 'import_movie_from_sql.sql', you should check out the last section of this text file.
+
+Here are the sql files to run. They are placed in the 'project' folder:
     - import_movie_from_sql.sql
     - schema.sql
     - schema_ins.sql
-Please remember to correct the path in the last line in the file 'import_movie_from_sql.sql'.
-Also note that if you have problems running 'import_movie_from_sql.sql', see last section of this text file.
 
 # Update password
 Change the password in the file __init__.py.
@@ -30,7 +33,7 @@ http://127.0.0.1:5000/
 
 ###
 
-# Alternative to running 'import_movie_from_sql.sql' (only relevant if the file causes troubles)
+# Alternative to running 'import_movie_from_sql.sql' (only relevant if running the file causes troubles)
 First, create the table using:
 
 	CREATE table Movies(
@@ -59,6 +62,6 @@ First, create the table using:
 	PRIMARY KEY (movie_id)
 	);
 
-Then, run the following in the terminal ('PSQL tool' in pgadmin). Remeber to change the path.
+Then, run the following in the terminal ('PSQL tool' in pgadmin). Remember to change the path.
 
 	\copy Movies FROM '/home/kristian/Desktop/movies.csv' DELIMITER ',' CSV HEADER;
