@@ -19,14 +19,6 @@ def home():
             return redirect(url_for('quiz'))
     return render_template("home.html", error=noNameError)
 
-@app.route("/about/")
-def about():
-    return render_template("about.html")
-
-@app.route("/contact/")
-def contact():
-    return render_template("contact.html")
-
 @app.route("/finish/", methods = ['GET', 'POST'])
 def finish():
     name = session.get("name")
@@ -44,19 +36,6 @@ def finish():
             return render_template("home.html", error=False)
 
     return render_template("finish.html")
-
-@app.route("/hello/")
-@app.route("/hello/<name>")
-def hello_there(name = None):
-    return render_template(
-        "hello_there.html",
-        name=name,
-        date=datetime.now()
-    )
-
-@app.route("/api/data")
-def get_data():
-    return app.send_static_file("data.json")
 
 @app.route('/quiz',  methods = ['GET', 'POST'])
 def quiz():
@@ -89,7 +68,7 @@ def quiz():
 
     # Question 2-5
     else:
-        # Check answer and credit points
+        # Check answer
         answer = request.form.get('answer')
         question_number = request.form.get('question_number', type=int)
         quiz_id = request.form.get('quiz_id', type=int)
@@ -97,6 +76,7 @@ def quiz():
         if answer is not None:
             # Strip leading and trailing whitespaces from the answer
             answer = answer.strip()
+            # Extract correct answer from database
             correct_answer = get_correct_answer(quiz_id, question_number)
             # Check player answer. To take spelling mistakes into account, just four 
             # characters (in the correct order, though) need to match.
@@ -110,7 +90,7 @@ def quiz():
         else:
             is_correct = False
             
-        # Add point to player
+        # Add point to player if answer is correct
         if is_correct:
             score = get_player_score(name, decade) + 1
             update_Players_Score(name, decade, score)
